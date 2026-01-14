@@ -16,12 +16,9 @@ from jsonschema import validate, ValidationError, Draft7Validator
 def extract_json(text: str) -> Optional[str]:
     """
     Extract JSON from text that may contain markdown or other content.
-
     Looks for JSON between ```json and ``` blocks, or standalone JSON objects.
-
     Args:
         text: Input text possibly containing JSON
-
     Returns:
         Extracted JSON string or None
     """
@@ -50,7 +47,6 @@ def extract_json(text: str) -> Optional[str]:
 def repair_json(text: str) -> Tuple[bool, Optional[str], Optional[str]]:
     """
     Attempt to repair common JSON formatting errors.
-
     Common fixes:
     - Remove trailing commas
     - Fix unquoted keys
@@ -99,11 +95,9 @@ def repair_json(text: str) -> Tuple[bool, Optional[str], Optional[str]]:
 def validate_json_schema(data: Any, schema: Dict[str, Any]) -> Tuple[bool, Optional[str]]:
     """
     Validate JSON data against a JSON schema.
-
     Args:
         data: Parsed JSON data (dict or list)
         schema: JSON schema definition
-
     Returns:
         Tuple of (valid: bool, error_message: str | None)
     """
@@ -117,9 +111,7 @@ def validate_json_schema(data: Any, schema: Dict[str, Any]) -> Tuple[bool, Optio
 def safe_parse_json(text: str) -> Tuple[bool, Optional[Any], Optional[str]]:
     """
     Safely parse JSON with automatic extraction and repair.
-
     Combines extract_json() and repair_json() for robust parsing.
-
     Args:
         text: Text containing or being JSON
 
@@ -166,10 +158,8 @@ def safe_parse_json(text: str) -> Tuple[bool, Optional[Any], Optional[str]]:
 def format_schema_for_prompt(schema: Dict[str, Any]) -> str:
     """
     Format a JSON schema nicely for inclusion in prompts.
-
     Args:
         schema: JSON schema dict
-
     Returns:
         Formatted string representation
     """
@@ -181,11 +171,9 @@ def create_simple_schema(
 ) -> Dict[str, Any]:
     """
     Create a simple JSON schema from property types.
-
     Args:
         properties: Dict mapping field names to types (string, number, boolean, etc.)
         required: Optional list of required field names
-
     Returns:
         JSON schema dict
 
@@ -211,13 +199,10 @@ def create_simple_schema(
 def pydantic_to_json_schema(pydantic_model) -> dict:
     """
     Convert a Pydantic model to JSON schema.
-
     Args:
         pydantic_model: A Pydantic BaseModel class (not instance)
-
     Returns:
         JSON schema dict
-
     Example:
         >>> from pydantic import BaseModel
         >>> class Product(BaseModel):
@@ -231,11 +216,9 @@ def pydantic_to_json_schema(pydantic_model) -> dict:
 def parse_json_with_pydantic(json_str: str, pydantic_model):
     """
     Parse and validate JSON string using a Pydantic model.
-
     Args:
         json_str: JSON string to parse
         pydantic_model: Pydantic BaseModel class
-
     Returns:
         Tuple of (success: bool, data: BaseModel or None, error: str or None)
 
@@ -262,13 +245,10 @@ def parse_json_with_pydantic(json_str: str, pydantic_model):
 def format_pydantic_schema_for_prompt(pydantic_model) -> str:
     """
     Format a Pydantic model's schema for inclusion in prompts.
-
     Args:
         pydantic_model: Pydantic BaseModel class
-
     Returns:
         Formatted schema string
-
     Example:
         >>> from pydantic import BaseModel
         >>> class Product(BaseModel):

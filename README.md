@@ -89,4 +89,77 @@ The system is highly configurable via `config/config.yaml`:
 
 Model specific mappings can be found and updated in `config/models.yaml`, organizing models into "general", "strong", and "reason" tiers.
 
+## Notebook Workflows & Usage Guide
 
+The project is organized into a series of educational and functional notebooks. It is recommended to run them in the following order:
+
+### 1. 00_setup_and_verification.ipynb
+
+**Purpose**: System Health Check
+
+* **What it does**: Verifies that your environment is correctly configured. It checks for the presence of API keys (OpenAI, Gemini, Groq), initializes the custom `LLMClient`, and runs a simple "Hello World" smoke test against all enabled providers.
+* **Key Output**: A `runs.csv` log file created in the `logs/` directory, establishing that the logging system is active.
+
+### 2. 01_few_shot_classification.ipynb
+
+**Purpose**: Message Classification (The "Dispatcher")
+
+* **Concept**: Uses **Few-Shot Prompting** to teach the model how to classify incoming disaster messages without fine-tuning.
+* **Process**:
+  1. Loads raw text messages from `data/sample_messages.txt`.
+  2. Provides the LLM with 3-4 examples of correct classifications (e.g., mapping "water rising" to "Rescue" intent).
+  3. Classifies new messages into structured fields: `District`, `Intent` (Rescue/Supply/Info/Other), and `Priority`.
+* **Output**: A clean CSV `outputs/classified_messages_few_shot.csv` ready for downstream processing.
+
+### 3. 02_temperature_stability_test.ipynb
+
+**Purpose**: Reliability Testing (The "Stress Test")
+
+* **Concept**: Demonstrates the impact of the `temperature` parameter on model determinism.
+* **Experiment**:
+  * **Chaos Mode (Temp = 1.0)**: Runs scenarios with high randomness to show how models can hallucinate or produce inconsistent safety-critical outputs.
+  * **Safe Mode (Temp = 0.0)**: Runs the same scenarios to demonstrate consistent, reliable decision-making required for crisis response.
+* **Takeaway**: In disaster systems, always use low temperature (0.0 - 0.2) for predictable logic.
+
+### 4. 03_logistics_commander_cot_tot.ipynb
+
+**Purpose**: Advanced Reasoning (The "Brain")
+
+* **Concept**: Implements **Chain of Thought (CoT)** and **Tree of Thoughts (ToT)** reasoning strategies.
+* **CoT Workflow**: The model is forced to "think silently" step-by-step to calculate priority scores for incidents based on complex rules (e.g., age vulnerability, medical urgency).
+* **ToT Workflow**: The model explores multiple routing strategies (Greedy vs. Closest-First vs. Logistics-Optimized) to solve a "Traveling Salesperson" style rescue boat problem. It evaluates each branch and selects the optimal path to save the most lives in the shortest time.
+
+### 5. 04_token_economics.ipynb
+
+**Purpose**: Cost & Context Management (The "Budget Keeper")
+
+* **Concept**: Manages the trade-off between context context window limits and costs.
+* **Mechanism**:
+  * Calculates the token count for every incoming message before sending it to the LLM.
+  * If a message exceeds the `TOKEN_LIMIT`, it triggers a separate "Summarizer" agent to compress the text while retaining critical information.
+  * Processes the safe/summarized text for final output.
+* **Outcome**: Prevents context window overflows and reduces API costs by avoiding processing of unnecessarily long verbose inputs.
+
+### 6. 05_news_feed_extraction.ipynb
+
+**Purpose**: Intelligence Gathering (The "Analyst")
+
+* **Concept**: Extracts structured data from unstructured real-time news feeds.
+* **Tech Stack**: Uses **Pydantic** models and **Structured Outputs (JSON Mode)** to enforce strict schema validation.
+* **Process**:
+  1. Scrapes/Reads raw news headlines.
+  2. Extracts entities: `District`, `Flood Level`, `Victim Count`, `Main Need`, and `Status`.
+  3. Validates the data against a pre-defined schema (e.g., ensuring `District` is a valid Sri Lankan district).
+  4. Filters out invalid or irrelevant items.
+* **Output**: A validated Excel report `outputs/flood_report.xlsx` containing only high-confidence intelligence.
+
+## Logging and Monitoring
+
+All LLM interactions are logged to `logs/runs.csv`. This log file includes:
+
+* Timestamp and Provider/Model used
+* Input/Output token counts (estimated vs actual)
+* Latency (ms)
+* Cost estimates
+
+Use the logging utilities in `utils/logging_utils.py` to analyze this data programmatically.

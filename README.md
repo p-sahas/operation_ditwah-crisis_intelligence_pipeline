@@ -163,3 +163,7 @@ All LLM interactions are logged to `logs/runs.csv`. This log file includes:
 * Cost estimates
 
 Use the logging utilities in `utils/logging_utils.py` to analyze this data programmatically.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

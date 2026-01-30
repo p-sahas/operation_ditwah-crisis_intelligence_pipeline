@@ -1,0 +1,19 @@
+[project]
+name = "operation-ditwah"
+version = "0.1.0"
+description = "Crisis Intelligence Pipeline"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "tiktoken",
+    "PyYAML",
+    "openai",
+    "google-genai",
+    "groq",
+    "python-dotenv",
+    "jsonschema",
+    "pandas",
+    "pydantic",
+    "ipython",
+]
+

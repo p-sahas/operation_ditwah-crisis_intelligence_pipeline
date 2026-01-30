@@ -1,0 +1,10 @@
+tiktoken
+PyYAML
+openai
+google-genai
+groq
+python-dotenv
+jsonschema
+pandas
+pydantic
+ipython

@@ -1,8 +1,4 @@
-```
-
-```
-
-Operation Ditwah – Crisis Intelligence Pipeline
+# Operation Ditwah – Crisis Intelligence Pipeline
 
 ## Overview
 
